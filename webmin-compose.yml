@@ -1,0 +1,31 @@
+
+version: '3.8'
+ 
+services:
+
+  webmin:
+    image: "traefik/whoami"
+    ports:
+      - 10000:10000
+    networks:
+      - traefik-public
+    environment:
+      - CHEQD_WEBMIN_DOMAIN=cheqd-webmin.vaipoa.com
+    labels:
+      - traefik.enable=true # enable traefik
+      - traefik.docker.network=traefik-public # put it in the same network as traefik
+      - traefik.constraint-label=traefik-public # assign the same label as traefik so it can be discovered
+      - traefik.http.routers.webmin.rule=Host(`${CHEQD_WEBMIN_DOMAIN}`)
+      - traefik.http.routers.webmin.entrypoints=http
+      # redirect HTTP to HTTPS and add SSL certificate 
+      - traefik.http.middlewares.webmin.redirectscheme.scheme=https # redirect traffic to https // check if webmin-https-redirect
+      - traefik.http.middlewares.webmin.redirectscheme.permanent=true # redirect traffic to https // check if webmin-https-redirect
+      - traefik.http.routers.webmin-secured.rule=Host(`${CHEQD_WEBMIN_DOMAIN}`) # listen to port 443 for request to SHINY_DOMAIN (use together with the line below)
+      - traefik.http.routers.webmin-secured.entrypoints=https
+      - traefik.http.routers.webmin-secured.tls.certresolver=le # use the Let's Encrypt certificate we set up earlier
+      # assign app service
+      - traefik.http.routers.webmin-secured.service=webmin
+      - traefik.http.routers.webmin-secured.middlewares=webmin-auth@docker
+      # 
+      - traefik.http.services.webmin-secured.loadbalancer.server.port=10000 # ask Traefik to search for port 8080 of the webmin service container
+
