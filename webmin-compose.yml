@@ -9,8 +9,8 @@ services:
       - 10000:10000
     networks:
       - traefik-public
-    environment:
-      - CHEQD_WEBMIN_DOMAIN=cheqd-webmin.vaipoa.com
+    secrets:
+      - CHEQD_WEBMIN_DOMAIN
     labels:
       - traefik.enable=true # enable traefik
       - traefik.docker.network=traefik-public # put it in the same network as traefik
