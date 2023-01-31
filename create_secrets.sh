@@ -7,9 +7,10 @@ while read line; do
   if [ "$value" = "prompt" ]; then
     # Keep prompting for passwords until they match
     while true; do
-      read -s -p "Enter a password for $key: " password
-      echo
-      read -s -p "Verify password: " verify
+      echo "Enter a password for $key: "
+      read -s password
+      echo "Verify password: "
+      read -s verify
       if [ "$password" = "$verify" ]; then
         # Passwords match, exit loop
         break
@@ -20,15 +21,16 @@ while read line; do
     done
 
     value=$(echo -n $password | openssl passwd -apr1)
+    docker secret update "$key" - <<< "$value"
     if [ "$key" = "TRAEFIK_HASHED_PASSWORD" ]; then
       echo "This password will be used to access $key and should be stored."
-      read -p "Press Enter to acknowledge..."
+      echo "Press Enter to acknowledge..."
+      read
     fi
   elif [ "$value" = "encrypt" ]; then
     value=$(openssl rand -base64 32)
+    docker secret update "$key" - <<< "$value"
   fi
-
-  docker secret update "$key" - <<< "$value"
 done < /opt/$PROJECT_NAME/secrets.env
 
 
