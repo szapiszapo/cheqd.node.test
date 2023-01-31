@@ -3,13 +3,18 @@
 while read line; do
   key=$(echo $line | cut -d '=' -f 1)
   value=$(echo $line | cut -d '=' -f 2)
+#!/bin/bash
+
+while read line; do
+  key=$(echo $line | cut -d '=' -f 1)
+  value=$(echo $line | cut -d '=' -f 2)
 
   if [ "$value" = "prompt" ]; then
     # Keep prompting for passwords until they match
     while true; do
-      echo "Enter a password for $key: "
+      echo -n "Enter a password for $key: "
       read password
-      echo "Verify password: "
+      echo -n "Verify password: "
       read verify
       if [ "$password" = "$verify" ]; then
         # Passwords match, exit loop
