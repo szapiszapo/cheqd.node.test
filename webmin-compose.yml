@@ -10,17 +10,17 @@ services:
     networks:
       - traefik-public
     secrets:
-      - CHEQD_WEBMIN_DOMAIN
+      - WEBMIN_DOMAIN
     labels:
       - traefik.enable=true # enable traefik
       - traefik.docker.network=traefik-public # put it in the same network as traefik
       - traefik.constraint-label=traefik-public # assign the same label as traefik so it can be discovered
-      - traefik.http.routers.webmin.rule=Host(`${CHEQD_WEBMIN_DOMAIN}`)
+      - traefik.http.routers.webmin.rule=Host(`${WEBMIN_DOMAIN}`)
       - traefik.http.routers.webmin.entrypoints=http
       # redirect HTTP to HTTPS and add SSL certificate 
       - traefik.http.middlewares.webmin.redirectscheme.scheme=https # redirect traffic to https // check if webmin-https-redirect
       - traefik.http.middlewares.webmin.redirectscheme.permanent=true # redirect traffic to https // check if webmin-https-redirect
-      - traefik.http.routers.webmin-secured.rule=Host(`${CHEQD_WEBMIN_DOMAIN}`) # listen to port 443 for request to SHINY_DOMAIN (use together with the line below)
+      - traefik.http.routers.webmin-secured.rule=Host(`${WEBMIN_DOMAIN}`) # listen to port 443 for request to SHINY_DOMAIN (use together with the line below)
       - traefik.http.routers.webmin-secured.entrypoints=https
       - traefik.http.routers.webmin-secured.tls.certresolver=le # use the Let's Encrypt certificate we set up earlier
       # assign app service

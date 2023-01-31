@@ -28,7 +28,7 @@ while read line; do
     value=$(openssl rand -base64 32)
   fi
 
-  docker secret create "$key" - <<< "$value"
+  docker secret update "$key" - <<< "$value"
 done < /opt/$PROJECT_NAME/secrets.env
 
 
