@@ -8,9 +8,9 @@ while read line; do
     # Keep prompting for passwords until they match
     while true; do
       echo "Enter a password for $key: "
-      read -s password
+      read password
       echo "Verify password: "
-      read -s verify
+      read verify
       if [ "$password" = "$verify" ]; then
         # Passwords match, exit loop
         break
