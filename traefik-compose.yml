@@ -1,5 +1,15 @@
 
 version: '3.8'
+
+secrets:
+  TRAEFIK_USERNAME:
+    external: true
+  TRAEFIK_HASHED_PASSWORD:
+    external: true
+  TRAEFIK_DOMAIN:
+    external: true
+  LE_AUTH_EMAIL:
+    external: true
  
 services:
    
