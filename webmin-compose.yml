@@ -1,6 +1,10 @@
 
 version: '3.8'
- 
+
+secrets:
+  WEBMIN_DOMAIN:
+    external: true
+
 services:
 
   webmin:
