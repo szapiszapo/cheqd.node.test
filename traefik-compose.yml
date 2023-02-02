@@ -34,7 +34,7 @@ services:
       CHEQD_TRAEFIK_HASHED_PASSWORD_FILE: /run/secrets/TRAEFIK_HASHED_PASSWORD
       CHEQD_TRAEFIK_DOMAIN_FILE: /run/secrets/TRAEFIK_DOMAIN
       CHEQD_LE_AUTH_EMAIL_FILE: /run/secrets/LE_AUTH_EMAIL
-    entrypoint: /traefik-entrypoint.sh
+    entrypoint: ["/bin/sh","/traefik-entrypoint.sh"] 
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
@@ -82,6 +82,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # Mount the volume to store the certificates
       - traefik-public-certificates:/certificates
+      # Mount the volume to entrypoint
+      - ./traefik-entrypoint.sh:/traefik-entrypoint.sh
     command:
       # Enable Docker in Traefik, so that it reads labels from Docker services
       - --providers.docker
