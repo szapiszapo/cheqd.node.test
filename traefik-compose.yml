@@ -26,10 +26,10 @@ services:
       - source: LE_AUTH_EMAIL
         target: LE_AUTH_EMAIL
     environment:
-      - TRAEFIK_USERNAME_='/run/secrets/TRAEFIK_USERNAME' #${TRAEFIK_USERNAME}
-      - TRAEFIK_HASHED_PASSWORD_='/run/secrets/TRAEFIK_HASHED_PASSWORD' #${TRAEFIK_HASHED_PASSWORD}
-      - TRAEFIK_DOMAIN_='/run/secrets/TRAEFIK_DOMAIN' #${TRAEFIK_DOMAIN}
-      - LE_AUTH_EMAIL_='/run/secrets/LE_AUTH_EMAIL' #${LE_AUTH_EMAIL}
+      - TRAEFIK_USERNAME_="/run/secrets/TRAEFIK_USERNAME" #${TRAEFIK_USERNAME}
+      - TRAEFIK_HASHED_PASSWORD_="/run/secrets/TRAEFIK_HASHED_PASSWORD" #${TRAEFIK_HASHED_PASSWORD}
+      - TRAEFIK_DOMAIN_="/run/secrets/TRAEFIK_DOMAIN" #${TRAEFIK_DOMAIN}
+      - LE_AUTH_EMAIL_="/run/secrets/LE_AUTH_EMAIL" #${LE_AUTH_EMAIL}
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
@@ -57,7 +57,7 @@ services:
         - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
         # traefik-http set up only to use the middleware to redirect to https
-        - traefik.http.routers.traefik-public-http.rule=Host('${TRAEFIK_DOMAIN_}')
+        - traefik.http.routers.traefik-public-http.rule=Host(`${TRAEFIK_DOMAIN_}`)
         - traefik.http.routers.traefik-public-http.entrypoints=http
         - traefik.http.routers.traefik-public-http.middlewares=https-redirect
         # traefik-https the actual router using HTTPS
