@@ -21,7 +21,7 @@ file_env() {
    unset "$fileVar"
 }
 
-file_env "CHEQD_TRAEFIK_USERNAME"
+file_env "CHEQD_TRAEFIK_USERNAME" '%'
 file_env "CHEQD_TRAEFIK_HASHED_PASSWORD"
 file_env "CHEQD_TRAEFIK_DOMAIN"
 file_env "CHEQD_LE_AUTH_EMAIL"
