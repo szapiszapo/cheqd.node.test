@@ -16,20 +16,27 @@ services:
   traefik:
     # Use the latest Traefik image
     image: traefik:latest
+    # secrets:
+    #   - source: TRAEFIK_USERNAME
+    #     target: TRAEFIK_USERNAME
+    #   - source: TRAEFIK_HASHED_PASSWORD
+    #     target: TRAEFIK_HASHED_PASSWORD
+    #   - source: TRAEFIK_DOMAIN
+    #     target: TRAEFIK_DOMAIN
+    #   - source: LE_AUTH_EMAIL
+    #     target: LE_AUTH_EMAIL
+    
     secrets:
-      - source: TRAEFIK_USERNAME
-        target: TRAEFIK_USERNAME
-      - source: TRAEFIK_HASHED_PASSWORD
-        target: TRAEFIK_HASHED_PASSWORD
-      - source: TRAEFIK_DOMAIN
-        target: TRAEFIK_DOMAIN
-      - source: LE_AUTH_EMAIL
-        target: LE_AUTH_EMAIL
+      - TRAEFIK_USERNAME
+      - TRAEFIK_HASHED_PASSWORD
+      - TRAEFIK_DOMAIN
+      - LE_AUTH_EMAIL
+
     environment:
-      - TRAEFIK_USERNAME: ${TRAEFIK_USERNAME}
-      - TRAEFIK_HASHED_PASSWORD: ${TRAEFIK_HASHED_PASSWORD}
-      - TRAEFIK_DOMAIN: ${TRAEFIK_DOMAIN}
-      - LE_AUTH_EMAIL: ${LE_AUTH_EMAIL}
+      - TRAEFIK_USERNAME=${TRAEFIK_USERNAME}
+      - TRAEFIK_HASHED_PASSWORD=${TRAEFIK_HASHED_PASSWORD}
+      - TRAEFIK_DOMAIN=${TRAEFIK_DOMAIN}
+      - LE_AUTH_EMAIL=${LE_AUTH_EMAIL}
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
