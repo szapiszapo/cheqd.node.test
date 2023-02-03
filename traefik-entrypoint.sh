@@ -25,5 +25,3 @@ file_env 'CHEQD_TRAEFIK_USERNAME'
 file_env 'CHEQD_TRAEFIK_DOMAIN'
 file_env 'CHEQD_LE_AUTH_EMAIL'
 file_env 'CHEQD_TRAEFIK_HASHED_PASSWORD'
-
-exec "$@"
