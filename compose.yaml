@@ -17,8 +17,8 @@ services:
     # Use the latest Traefik image
     image: traefik:latest
     build:
-      context: /opt/cheqd_node
-      dockerfile: Dockerfile
+      context: "/opt/cheqd_node"
+      args: { }
     secrets:
       # - source: TRAEFIK_USERNAME
       #   target: TRAEFIK_USERNAME
