@@ -43,7 +43,7 @@ services:
       CHEQD_TRAEFIK_HASHED_PASSWORD: /run/secrets/TRAEFIK_HASHED_PASSWORD
       CHEQD_TRAEFIK_DOMAIN: /run/secrets/TRAEFIK_DOMAIN
       CHEQD_LE_AUTH_EMAIL: /run/secrets/LE_AUTH_EMAIL
-    # entrypoint:  ["/bin/sh","/traefik-entrypoint.sh"] 
+    entrypoint:  /traefik-entrypoint.sh
     # entrypoint:
     #   - chmod +x /docker-entrypoint.sh
     #   - /docker-entrypoint.sh
