@@ -1,4 +1,4 @@
-FROM busybox
+FROM traefik:v2.9.6
 ARG PROJECT_NAME
 ENV env_name $PROJECT_NAME
 WORKDIR /opt/$PROJECT_NAME

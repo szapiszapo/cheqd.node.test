@@ -16,9 +16,6 @@ services:
   traefik:
     # Use the latest Traefik image
     image: traefik:v2.9.6
-    build:
-      context: "/opt/cheqd_node"
-      args: { }
     secrets:
       - source: TRAEFIK_USERNAME
         target: TRAEFIK_USERNAME
