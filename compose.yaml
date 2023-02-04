@@ -44,13 +44,13 @@ services:
       # - CHEQD_TRAEFIK_DOMAIN="domain"
       # - CHEQD_LE_AUTH_EMAIL="email"
     # entrypoint: /traefik-entrypoint.sh
-    command: sh -c "chmod +x /usr/local/bin/traefik-entrypoint.sh ; source /usr/local/bin/traefik-entrypoint.sh" 
+    command: sh -c "apk add --no-cache bash ; chmod +x /usr/local/bin/traefik-entrypoint.sh ; source /usr/local/bin/traefik-entrypoint.sh" 
       # - chmod +x /usr/local/bin/traefik-entrypoint.sh
       # - /usr/local/bin/traefik-entrypoint.sh
     # entrypoint: [ '/bin/sh', '-c', 'export CHEQD_TRAEFIK_USERNAME=$$(cat /run/secrets/TRAEFIK_USERNAME) ; \
     #                export CHEQD_TRAEFIK_HASHED_PASSWORD=$$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; \
     #                export CHEQD_TRAEFIK_DOMAIN=$$(cat /run/secrets/TRAEFIK_DOMAIN) ; \
-    #                export CHEQD_LE_AUTH_EMAIL=$$(cat /run/secrets/LE_AUTH_EMAIL)' ] #; source /entrypoint.sh
+    #                export CHEQD_LE_AUTH_EMAIL=$$(cat /run/secrets/LE_AUTH_EMAIL); source /entrypoint.sh' ]
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
