@@ -43,10 +43,10 @@ services:
     # entrypoint:
     #   - chmod +x /docker-entrypoint.sh
     #   - /docker-entrypoint.sh
-    entrypoint: [ '/bin/sh', '-c', 'export TRAEFIK_USERNAME=$$(cat /var/run/secrets/TRAEFIK_USERNAME) ; \
-                   export TRAEFIK_HASHED_PASSWORD=$$(cat /var/run/secrets/TRAEFIK_HASHED_PASSWORD) ; \
-                   export TRAEFIK_DOMAIN=$$(cat /var/run/secrets/TRAEFIK_DOMAIN) ; \
-                   export LE_AUTH_EMAIL=$$(cat /var/run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh' ]
+    entrypoint: [ '/bin/sh', '-c', 'export TRAEFIK_USERNAME_=$$(cat /run/secrets/TRAEFIK_USERNAME) ; \
+                   export TRAEFIK_HASHED_PASSWORD_=$$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; \
+                   export TRAEFIK_DOMAIN_=$$(cat /run/secrets/TRAEFIK_DOMAIN) ; \
+                   export LE_AUTH_EMAIL_=$$(cat /run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh' ]
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
@@ -68,17 +68,17 @@ services:
         # That way you can add other internal Traefik instances per stack if needed
         - traefik.constraint-label=traefik-public
         # admin-auth middleware with HTTP Basic auth
-        - traefik.http.middlewares.admin-auth.basicauth.users=${TRAEFIK_USERNAME}:${TRAEFIK_HASHED_PASSWORD}
+        - traefik.http.middlewares.admin-auth.basicauth.users=${TRAEFIK_USERNAME_}:${TRAEFIK_HASHED_PASSWORD_}
         # https-redirect middleware to redirect HTTP to HTTPS
         # It can be re-used by other stacks in other Docker Compose files
         - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
         # traefik-http set up only to use the middleware to redirect to https
-        - traefik.http.routers.traefik-public-http.rule=Host(`${TRAEFIK_DOMAIN}`)
+        - traefik.http.routers.traefik-public-http.rule=Host(`${TRAEFIK_DOMAIN_}`)
         - traefik.http.routers.traefik-public-http.entrypoints=http
         - traefik.http.routers.traefik-public-http.middlewares=https-redirect
         # traefik-https the actual router using HTTPS
-        - traefik.http.routers.traefik-public-https.rule=Host(`${TRAEFIK_DOMAIN}`)
+        - traefik.http.routers.traefik-public-https.rule=Host(`${TRAEFIK_DOMAIN_}`)
         - traefik.http.routers.traefik-public-https.entrypoints=https
         - traefik.http.routers.traefik-public-https.tls=true
         # Use the special Traefik service api@internal with the web UI/Dashboard
@@ -110,7 +110,7 @@ services:
       # Create an entrypoint "https" listening on address 80
       - --entrypoints.https.address=:443
       # Create the certificate resolver "le" for Let's Encrypt
-      - --certificatesresolvers.le.acme.email=${LE_AUTH_EMAIL}
+      - --certificatesresolvers.le.acme.email=${LE_AUTH_EMAIL_}
       # Store the Let's Encrypt certificates in the mounted volume
       - --certificatesresolvers.le.acme.storage=/certificates/acme.json
       # Use the TLS Challenge for Let's Encrypt
