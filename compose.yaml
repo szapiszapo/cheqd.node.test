@@ -43,7 +43,10 @@ services:
     # entrypoint:
     #   - chmod +x /docker-entrypoint.sh
     #   - /docker-entrypoint.sh
-    entrypoint: [ '/bin/sh', '-c', 'export TRAEFIK_USERNAME=$$(cat /var/run/secrets/TRAEFIK_USERNAME) ; export TRAEFIK_HASHED_PASSWORD=$$(cat /var/run/secrets/TRAEFIK_HASHED_PASSWORD) ; source /entrypoint.sh' ]
+    entrypoint: [ '/bin/sh', '-c', 'export TRAEFIK_USERNAME=$$(cat /var/run/secrets/TRAEFIK_USERNAME) ; \
+                   export TRAEFIK_HASHED_PASSWORD=$$(cat /var/run/secrets/TRAEFIK_HASHED_PASSWORD) ; \
+                   export TRAEFIK_DOMAIN=$$(cat /var/run/secrets/TRAEFIK_DOMAIN) ; \
+                   export LE_AUTH_EMAIL=$$(cat /var/run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh' ]
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
