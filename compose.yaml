@@ -39,22 +39,19 @@ services:
       # CHEQD_TRAEFIK_HASHED_PASSWORD_FILE: /run/secrets/TRAEFIK_HASHED_PASSWORD
       # CHEQD_TRAEFIK_DOMAIN_FILE: /run/secrets/TRAEFIK_DOMAIN
       # CHEQD_LE_AUTH_EMAIL_FILE: /run/secrets/LE_AUTH_EMAIL
-      - CHEQD_TRAEFIK_USERNAME="user"
-      - CHEQD_TRAEFIK_HASHED_PASSWORD="password"
-      - CHEQD_TRAEFIK_DOMAIN="domain"
-      - CHEQD_LE_AUTH_EMAIL="email"
-      - CHEQD_TRAEFIK_USERNAME_FILE="/run/secrets/TRAEFIK_USERNAME"
-      - CHEQD_TRAEFIK_HASHED_PASSWORD_FILE="/run/secrets/TRAEFIK_HASHED_PASSWORD"
-      - CHEQD_TRAEFIK_DOMAIN_FILE="/run/secrets/TRAEFIK_DOMAIN"
-      - CHEQD_LE_AUTH_EMAIL_FILE="/run/secrets/LE_AUTH_EMAIL"
+      # - CHEQD_TRAEFIK_USERNAME="user"
+      # - CHEQD_TRAEFIK_HASHED_PASSWORD="password"
+      # - CHEQD_TRAEFIK_DOMAIN="domain"
+      # - CHEQD_LE_AUTH_EMAIL="email"
+    
     # entrypoint:  /traefik-entrypoint.sh
     # entrypoint:
     #   - chmod +x /docker-entrypoint.sh
     #   - /docker-entrypoint.sh
-    # entrypoint: [ '/bin/sh', '-c', 'export TRAEFIK_USERNAME_=$$(cat /run/secrets/TRAEFIK_USERNAME) ; \
-    #                export TRAEFIK_HASHED_PASSWORD_=$$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; \
-    #                export TRAEFIK_DOMAIN_=$$(cat /run/secrets/TRAEFIK_DOMAIN) ; \
-    #                export LE_AUTH_EMAIL_=$$(cat /run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh' ]
+    entrypoint: [ '/bin/sh', '-c', 'export TRAEFIK_USERNAME_=$$(cat /run/secrets/TRAEFIK_USERNAME) ; \
+                   export TRAEFIK_HASHED_PASSWORD_=$$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; \
+                   export TRAEFIK_DOMAIN_=$$(cat /run/secrets/TRAEFIK_DOMAIN) ; \
+                   export LE_AUTH_EMAIL_=$$(cat /run/secrets/LE_AUTH_EMAIL)' ] #; source /entrypoint.sh
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
