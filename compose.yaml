@@ -16,19 +16,22 @@ services:
   traefik:
     # Use the latest Traefik image
     image: traefik:v2.9.6
+    build:
+      context: "/opt/cheqd_node"
+      args: { }
     secrets:
-      - source: TRAEFIK_USERNAME
-        target: TRAEFIK_USERNAME
-      - source: TRAEFIK_HASHED_PASSWORD
-        target: TRAEFIK_HASHED_PASSWORD
-      - source: TRAEFIK_DOMAIN
-        target: TRAEFIK_DOMAIN
-      - source: LE_AUTH_EMAIL
-        target: LE_AUTH_EMAIL
-      # - TRAEFIK_USERNAME
-      # - TRAEFIK_HASHED_PASSWORD
-      # - TRAEFIK_DOMAIN
-      # - LE_AUTH_EMAIL
+      # - source: TRAEFIK_USERNAME
+      #   target: TRAEFIK_USERNAME
+      # - source: TRAEFIK_HASHED_PASSWORD
+      #   target: TRAEFIK_HASHED_PASSWORD
+      # - source: TRAEFIK_DOMAIN
+      #   target: TRAEFIK_DOMAIN
+      # - source: LE_AUTH_EMAIL
+      #   target: LE_AUTH_EMAIL
+      - TRAEFIK_USERNAME
+      - TRAEFIK_HASHED_PASSWORD
+      - TRAEFIK_DOMAIN
+      - LE_AUTH_EMAIL
     # tmpfs:
     #   - /run/secrets
     environment:
@@ -54,6 +57,8 @@ services:
       # Listen on port 443, default for HTTPS
       - 443:443
     deploy:
+      restart_policy:
+        condition: on-failure
       placement:
         constraints:
           # Make the traefik service run only on the node with this label
