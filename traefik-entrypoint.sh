@@ -1,35 +1,41 @@
 #!/usr/bin/env bash
 
-set -e
+export $(egrep  -v '^#'  /run/secrets/* | awk '{print "CHEQD_" $1}' | xargs)
+# if you need some specific file, where password is the secret name 
+# export $(egrep  -v '^#'  /run/secrets/password| xargs) 
+# call the dockerfile's entrypoint
+source /entrypoint.sh
 
-file_env() {
-   local var="$1"
-   local fileVar="${var}_FILE"
-   local def="${2:-}"
+# set -e
 
-   if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
-      echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
-      exit 1
-   fi
-   local val="$def"
-   if [ "${!var:-}" ]; then
-      val="${!var}"
-   elif [ "${!fileVar:-}" ]; then
-      val="$(< "${!fileVar}")"
-   fi
-   export "$var"="$val"
-   unset "$fileVar"
-}
+# file_env() {
+#    local var="$1"
+#    local fileVar="${var}_FILE"
+#    local def="${2:-}"
 
-file_env 'CHEQD_TRAEFIK_USERNAME'
-file_env 'CHEQD_TRAEFIK_DOMAIN'
-file_env 'CHEQD_LE_AUTH_EMAIL'
-file_env 'CHEQD_TRAEFIK_HASHED_PASSWORD'
-echo $CHEQD_TRAEFIK_USERNAME
+#    if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
+#       echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
+#       exit 1
+#    fi
+#    local val="$def"
+#    if [ "${!var:-}" ]; then
+#       val="${!var}"
+#    elif [ "${!fileVar:-}" ]; then
+#       val="$(< "${!fileVar}")"
+#    fi
+#    export "$var"="$val"
+#    unset "$fileVar"
+# }
 
-# first arg is `-f` or `--some-option`
-if [ "${1#-}" != "$1" ]; then
-	set -- php "$@"
-fi
+# file_env 'CHEQD_TRAEFIK_USERNAME'
+# file_env 'CHEQD_TRAEFIK_DOMAIN'
+# file_env 'CHEQD_LE_AUTH_EMAIL'
+# file_env 'CHEQD_TRAEFIK_HASHED_PASSWORD'
+# echo $CHEQD_TRAEFIK_USERNAME
 
-exec "$@"
+# # first arg is `-f` or `--some-option`
+# if [ "${1#-}" != "$1" ]; then
+# 	set -- php "$@"
+# fi
+
+# exec "$@"

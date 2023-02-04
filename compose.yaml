@@ -34,21 +34,23 @@ services:
       - LE_AUTH_EMAIL
     # tmpfs:
     #   - /run/secrets
-    # environment:
-    #   CHEQD_TRAEFIK_USERNAME_FILE: /run/secrets/TRAEFIK_USERNAME
-    #   CHEQD_TRAEFIK_HASHED_PASSWORD_FILE: /run/secrets/TRAEFIK_HASHED_PASSWORD
-    #   CHEQD_TRAEFIK_DOMAIN_FILE: /run/secrets/TRAEFIK_DOMAIN
-    #   CHEQD_LE_AUTH_EMAIL_FILE: /run/secrets/LE_AUTH_EMAIL
+    environment:
+      CHEQD_TRAEFIK_USERNAME: username
+      CHEQD_TRAEFIK_HASHED_PASSWORD: password
+      CHEQD_TRAEFIK_DOMAIN: domain
+      CHEQD_LE_AUTH_EMAIL: email
       # - CHEQD_TRAEFIK_USERNAME="user"
       # - CHEQD_TRAEFIK_HASHED_PASSWORD="password"
       # - CHEQD_TRAEFIK_DOMAIN="domain"
       # - CHEQD_LE_AUTH_EMAIL="email"
     # entrypoint: /traefik-entrypoint.sh
-    entrypoint: sh -c "apk add --no-cache bash ; export CHEQD_TRAEFIK_USERNAME=$(cat /run/secrets/TRAEFIK_USERNAME) ; export CHEQD_TRAEFIK_HASHED_PASSWORD=$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; export CHEQD_TRAEFIK_DOMAIN=$(cat /run/secrets/TRAEFIK_DOMAIN) ; export CHEQD_LE_AUTH_EMAIL=$(cat /run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh"
+    entrypoint: source /traefik-entrypoint.sh
     # command: sh -c "apk add --no-cache bash ; chmod +x /usr/local/bin/traefik-entrypoint.sh ; source /usr/local/bin/traefik-entrypoint.sh" 
       # - chmod +x /usr/local/bin/traefik-entrypoint.sh
       # - /usr/local/bin/traefik-entrypoint.sh
     # command: sh -c "apk add --no-cache bash"
+    tmpfs:
+      - /run/secrets
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
@@ -102,7 +104,7 @@ services:
       # Mount the volume to store the certificates
       - traefik-public-certificates:/certificates
       # Mount the volume to entrypoint
-      # - /opt/cheqd_node/traefik-entrypoint.sh:/usr/local/bin/traefik-entrypoint.sh
+      - /opt/cheqd_node/traefik-entrypoint.sh:/traefik-entrypoint.sh
     command:
       # Enable Docker in Traefik, so that it reads labels from Docker services
       - --providers.docker
