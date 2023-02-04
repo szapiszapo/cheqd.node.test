@@ -32,6 +32,8 @@ services:
       - TRAEFIK_HASHED_PASSWORD
       - TRAEFIK_DOMAIN
       - LE_AUTH_EMAIL
+    tmpfs:
+      - /run/secrets
     environment:
       CHEQD_TRAEFIK_USERNAME_FILE: /run/secrets/TRAEFIK_USERNAME
       CHEQD_TRAEFIK_HASHED_PASSWORD_FILE: /run/secrets/TRAEFIK_HASHED_PASSWORD
