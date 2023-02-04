@@ -25,3 +25,11 @@ file_env 'CHEQD_TRAEFIK_USERNAME'
 file_env 'CHEQD_TRAEFIK_DOMAIN'
 file_env 'CHEQD_LE_AUTH_EMAIL'
 file_env 'CHEQD_TRAEFIK_HASHED_PASSWORD'
+echo $CHEQD_TRAEFIK_USERNAME
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- php "$@"
+fi
+
+exec "$@"
