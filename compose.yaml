@@ -43,7 +43,7 @@ services:
     # entrypoint:
     #   - chmod +x /docker-entrypoint.sh
     #   - /docker-entrypoint.sh
-      entrypoint: sh -c "export $$(egrep  -v '^#'  /run/secrets/* | xargs) ; source /entrypoint.sh"
+    entrypoint: sh -c "export $$(egrep  -v '^#'  /run/secrets/* | xargs) ; source /entrypoint.sh"
     ports:
       # Listen on port 80, default for HTTP, necessary to redirect to HTTPS
       - 80:80
