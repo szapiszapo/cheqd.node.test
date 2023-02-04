@@ -44,7 +44,7 @@ services:
       # - CHEQD_TRAEFIK_DOMAIN="domain"
       # - CHEQD_LE_AUTH_EMAIL="email"
     # entrypoint: /traefik-entrypoint.sh
-    entrypoint: [ '/bin/sh', '-c', 'chmod +x /usr/local/bin/traefik-entrypoint.sh ; source /usr/local/bin/traefik-entrypoint.sh' ]
+    command: sh -c "chmod +x /usr/local/bin/traefik-entrypoint.sh ; source /usr/local/bin/traefik-entrypoint.sh" 
       # - chmod +x /usr/local/bin/traefik-entrypoint.sh
       # - /usr/local/bin/traefik-entrypoint.sh
     # entrypoint: [ '/bin/sh', '-c', 'export CHEQD_TRAEFIK_USERNAME=$$(cat /run/secrets/TRAEFIK_USERNAME) ; \
