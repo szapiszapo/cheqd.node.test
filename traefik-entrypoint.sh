@@ -47,3 +47,5 @@ env_secrets_expand() {
 
 env_secrets_expand
 
+echo "${CHEQD_TRAEFIK_USERNAME}"
+
