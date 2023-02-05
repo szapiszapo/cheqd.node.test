@@ -15,7 +15,7 @@ services:
 
   traefik:
     # Use the latest Traefik image
-    image: traefik_image #:v2.9.6
+    image: traefik_image:latest #:v2.9.6
     # build:
     #   context: "/opt/cheqd_node"
     #   args: { }
