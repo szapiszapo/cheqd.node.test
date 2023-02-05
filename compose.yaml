@@ -45,7 +45,7 @@ services:
       # - CHEQD_LE_AUTH_EMAIL="email"
     # entrypoint: /traefik-entrypoint.sh
     # entrypoint: sh -c "apk add --no-cache bash ; export CHEQD_TRAEFIK_USERNAME=$$(cat /run/secrets/TRAEFIK_USERNAME) ; export CHEQD_TRAEFIK_HASHED_PASSWORD=$$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; export CHEQD_TRAEFIK_DOMAIN=$$(cat /run/secrets/TRAEFIK_DOMAIN) ; export CHEQD_LE_AUTH_EMAIL=$$(cat /run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh"
-    entrypoint: [ '/bin/sh', '-c', 'chmod +x /traefik-entrypoint.sh ; source /traefik-entrypoint.sh ; source /entrypoint.sh' ]
+    entrypoint: [ '/bin/sh', '-c', 'apk add --no-cache bash ; chmod +x /traefik-entrypoint.sh ; source /traefik-entrypoint.sh ; source /entrypoint.sh' ]
     # entrypoint: ["/traefik-entrypoint.sh"]
     # command: sh -c "apk add --no-cache bash ; chmod +x /traefik-entrypoint.sh ; source /traefik-entrypoint.sh ; " 
       # - chmod +x /usr/local/bin/traefik-entrypoint.sh
