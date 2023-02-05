@@ -35,18 +35,18 @@ services:
     # tmpfs:
     #   - /run/secrets
     environment:
-      CHEQD_TRAEFIK_USERNAME: username
-      CHEQD_TRAEFIK_HASHED_PASSWORD: password
-      CHEQD_TRAEFIK_DOMAIN: domain
-      CHEQD_LE_AUTH_EMAIL: email
+      CHEQD_TRAEFIK_USERNAME: DOCKER-SECRET->TRAEFIK_USERNAME
+      CHEQD_TRAEFIK_HASHED_PASSWORD: DOCKER-SECRET->TRAEFIK_HASHED_PASSWORD
+      CHEQD_TRAEFIK_DOMAIN: DOCKER-SECRET->TRAEFIK_DOMAIN
+      CHEQD_LE_AUTH_EMAIL: DOCKER-SECRET->LE_AUTH_EMAIL
       # - CHEQD_TRAEFIK_USERNAME="user"
       # - CHEQD_TRAEFIK_HASHED_PASSWORD="password"
       # - CHEQD_TRAEFIK_DOMAIN="domain"
       # - CHEQD_LE_AUTH_EMAIL="email"
     # entrypoint: /traefik-entrypoint.sh
     # entrypoint: sh -c "apk add --no-cache bash ; export CHEQD_TRAEFIK_USERNAME=$$(cat /run/secrets/TRAEFIK_USERNAME) ; export CHEQD_TRAEFIK_HASHED_PASSWORD=$$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; export CHEQD_TRAEFIK_DOMAIN=$$(cat /run/secrets/TRAEFIK_DOMAIN) ; export CHEQD_LE_AUTH_EMAIL=$$(cat /run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh"
-    entrypoint: [ '/bin/sh', '-c', 'export TEST=test ; source /entrypoint.sh' ]
-    # command: sh -c "apk add --no-cache bash ; chmod +x /usr/local/bin/traefik-entrypoint.sh ; source /usr/local/bin/traefik-entrypoint.sh" 
+    entrypoint: [ '/bin/sh', '-c', 'chmod +x /traefik-entrypoint.sh ; source /traefik-entrypoint.sh ; source /entrypoint.sh' ]
+    # command: sh -c "apk add --no-cache bash ; chmod +x /traefik-entrypoint.sh ; source /traefik-entrypoint.sh ; " 
       # - chmod +x /usr/local/bin/traefik-entrypoint.sh
       # - /usr/local/bin/traefik-entrypoint.sh
     # command: sh -c "apk add --no-cache bash"
@@ -103,7 +103,7 @@ services:
       # Mount the volume to store the certificates
       - traefik-public-certificates:/certificates
       # Mount the volume to entrypoint
-      # - /opt/cheqd_node/traefik-entrypoint.sh:/usr/local/bin/traefik-entrypoint.sh
+      - /opt/cheqd_node/traefik-entrypoint.sh:/traefik-entrypoint.sh
     command:
       # Enable Docker in Traefik, so that it reads labels from Docker services
       - --providers.docker

@@ -1,41 +1,49 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-export $(egrep  -v '^#'  /run/secrets/* | awk '{print "CHEQD_" $1}' | xargs)
-# if you need some specific file, where password is the secret name 
-# export $(egrep  -v '^#'  /run/secrets/password| xargs) 
-# call the dockerfile's entrypoint
-source /entrypoint.sh
+set -e
 
-# set -e
+# EXPANDING VARIABLES FROM DOCKER SECRETS
+: ${ENV_SECRETS_DIR:=/run/secrets}
 
-# file_env() {
-#    local var="$1"
-#    local fileVar="${var}_FILE"
-#    local def="${2:-}"
+env_secret_debug()
+{
+    if [ ! -z "$ENV_SECRETS_DEBUG" ]; then
+        echo -e "\033[1m$@\033[0m"
+    fi
+}
 
-#    if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
-#       echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
-#       exit 1
-#    fi
-#    local val="$def"
-#    if [ "${!var:-}" ]; then
-#       val="${!var}"
-#    elif [ "${!fileVar:-}" ]; then
-#       val="$(< "${!fileVar}")"
-#    fi
-#    export "$var"="$val"
-#    unset "$fileVar"
-# }
+# usage: env_secret_expand VAR
+#    ie: env_secret_expand 'XYZ_DB_PASSWORD'
+# (will check for "$XYZ_DB_PASSWORD" variable value for a placeholder that defines the
+#  name of the docker secret to use instead of the original value. For example:
+# XYZ_DB_PASSWORD="DOCKER-SECRET->my-db_secret"
+env_secret_expand() {
+    var="$1"
+    eval val=\$$var
+    if secret_name=$(expr match "$val" "DOCKER-SECRET->\([^}]\+\)$"); then
+        secret="${ENV_SECRETS_DIR}/${secret_name}"
+        env_secret_debug "Secret file for $var: $secret"
+        if [ -f "$secret" ]; then
+            val=$(cat "${secret}")
+            export "$var"="$val"
+            env_secret_debug "Expanded variable: $var=$val"
+        else
+            env_secret_debug "Secret file does not exist! $secret"
+        fi
+    fi
+}
 
-# file_env 'CHEQD_TRAEFIK_USERNAME'
-# file_env 'CHEQD_TRAEFIK_DOMAIN'
-# file_env 'CHEQD_LE_AUTH_EMAIL'
-# file_env 'CHEQD_TRAEFIK_HASHED_PASSWORD'
-# echo $CHEQD_TRAEFIK_USERNAME
+env_secrets_expand() {
+    for env_var in $(printenv | cut -f1 -d"=")
+    do
+        env_secret_expand $env_var
+    done
 
-# # first arg is `-f` or `--some-option`
-# if [ "${1#-}" != "$1" ]; then
-# 	set -- php "$@"
-# fi
+    if [ ! -z "$ENV_SECRETS_DEBUG" ]; then
+        echo -e "\n\033[1mExpanded environment variables\033[0m"
+        printenv
+    fi
+}
 
-# exec "$@"
+env_secrets_expand
+
