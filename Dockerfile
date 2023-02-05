@@ -5,5 +5,5 @@ ENV env_name $PROJECT_NAME
 WORKDIR /opt/$PROJECT_NAME
 COPY traefik-entrypoint.sh /traefik-entrypoint.sh
 RUN chmod +x /traefik-entrypoint.sh
-ENTRYPOINT ["/traefik-entrypoint.sh" ; "/entrypoint.sh"]
+ENTRYPOINT [ "/bin/sh", "-c", ". /traefik-entrypoint.sh ; . /entrypoint.sh" ]
 # CMD [ "--allow-to-run-as-root", "--nodaemonize" ]
