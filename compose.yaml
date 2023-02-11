@@ -3,13 +3,13 @@ version: '3.8'
 
 secrets:
   TRAEFIK_USERNAME:
-    external: true
+    file: "/opt/$PROJECT_NAME/secrets/TRAEFIK_USERNAME.secret"
   TRAEFIK_HASHED_PASSWORD:
-    external: true
+    file: "/opt/$PROJECT_NAME/secrets/TRAEFIK_HASHED_PASSWORD.secret"
   TRAEFIK_DOMAIN:
-    external: true
+    file: "/opt/$PROJECT_NAME/secrets/TRAEFIK_DOMAIN.secret"
   LE_AUTH_EMAIL:
-    external: true
+    file: "/opt/$PROJECT_NAME/secrets/LE_AUTH_EMAIL.secret"
 
 services:
 
@@ -35,10 +35,11 @@ services:
     # tmpfs:
     #   - /run/secrets
     environment:
-      - CHEQD_TRAEFIK_USERNAME=DOCKER-SECRET->TRAEFIK_USERNAME
-      - CHEQD_TRAEFIK_HASHED_PASSWORD=DOCKER-SECRET->TRAEFIK_HASHED_PASSWORD
-      - CHEQD_TRAEFIK_DOMAIN=DOCKER-SECRET->TRAEFIK_DOMAIN
-      - CHEQD_LE_AUTH_EMAIL=DOCKER-SECRET->LE_AUTH_EMAIL
+      - PROJECT_NAME=$PROJECT_NAME
+      - CHEQD_TRAEFIK_USERNAME=/run/secrets/TRAEFIK_USERNAME
+      - CHEQD_TRAEFIK_HASHED_PASSWORD=/run/secrets/RAEFIK_HASHED_PASSWORD
+      - CHEQD_TRAEFIK_DOMAIN=/run/secrets/TRAEFIK_DOMAIN
+      - CHEQD_LE_AUTH_EMAIL=/run/secrets/LE_AUTH_EMAIL
       # - CHEQD_TRAEFIK_USERNAME="user"
       # - CHEQD_TRAEFIK_HASHED_PASSWORD="password"
       # - CHEQD_TRAEFIK_DOMAIN="domain"
