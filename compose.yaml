@@ -35,7 +35,7 @@ services:
     # tmpfs:
     #   - /run/secrets
     environment:
-      - PROJECT_NAME=$PROJECT_NAME
+      - PROJECT_NAME=${PROJECT_NAME}
       - CHEQD_TRAEFIK_USERNAME=/run/secrets/TRAEFIK_USERNAME
       - CHEQD_TRAEFIK_HASHED_PASSWORD=/run/secrets/RAEFIK_HASHED_PASSWORD
       - CHEQD_TRAEFIK_DOMAIN=/run/secrets/TRAEFIK_DOMAIN
