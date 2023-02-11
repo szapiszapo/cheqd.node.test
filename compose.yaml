@@ -16,20 +16,16 @@ services:
   traefik:
     image: traefik:latest
     secrets:
-      - source: TRAEFIK_USERNAME
-        target: CHEQD_TRAEFIK_USERNAME
-      - source: TRAEFIK_HASHED_PASSWORD
-        target: CHEQD_TRAEFIK_HASHED_PASSWORD
-      - source: TRAEFIK_DOMAIN
-        target: CHEQD_TRAEFIK_DOMAIN
-      - source: LE_AUTH_EMAIL
-        target: CHEQD_LE_AUTH_EMAIL
+      - TRAEFIK_USERNAME
+      - TRAEFIK_HASHED_PASSWORD
+      - TRAEFIK_DOMAIN
+      - LE_AUTH_EMAIL
     environment:
       - "PROJECT_NAME=${PROJECT_NAME}"
-      # - "CHEQD_TRAEFIK_USERNAME=/run/secrets/TRAEFIK_USERNAME"
-      # - "CHEQD_TRAEFIK_HASHED_PASSWORD=/run/secrets/TRAEFIK_HASHED_PASSWORD"
-      # - "CHEQD_TRAEFIK_DOMAIN=/run/secrets/TRAEFIK_DOMAIN"
-      # - "CHEQD_LE_AUTH_EMAIL=/run/secrets/LE_AUTH_EMAIL"
+      - "TRAEFIK_USERNAME_FILE=/run/secrets/TRAEFIK_USERNAME"
+      - "TRAEFIK_HASHED_PASSWORD_FILE=/run/secrets/TRAEFIK_HASHED_PASSWORD"
+      - "TRAEFIK_DOMAIN_FILE=/run/secrets/TRAEFIK_DOMAIN"
+      - "LE_AUTH_EMAIL_FILE=/run/secrets/LE_AUTH_EMAIL"
     # entrypoint: /traefik-entrypoint.sh
     # entrypoint: sh -c "apk add --no-cache bash ; export CHEQD_TRAEFIK_USERNAME=$$(cat /run/secrets/TRAEFIK_USERNAME) ; export CHEQD_TRAEFIK_HASHED_PASSWORD=$$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; export CHEQD_TRAEFIK_DOMAIN=$$(cat /run/secrets/TRAEFIK_DOMAIN) ; export CHEQD_LE_AUTH_EMAIL=$$(cat /run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh"
     # entrypoint: [ '/bin/sh', '-c', 'apk add --no-cache bash ; chmod +x /traefik-entrypoint.sh ; . /traefik-entrypoint.sh ; . /entrypoint.sh' ]
@@ -61,19 +57,19 @@ services:
         # That way you can add other internal Traefik instances per stack if needed
         - traefik.constraint-label=traefik-public
         # admin-auth middleware with HTTP Basic auth
-        - traefik.http.middlewares.admin-auth.basicauth.users=${CHEQD_TRAEFIK_USERNAME}:${CHEQD_TRAEFIK_HASHED_PASSWORD}
+        - traefik.http.middlewares.admin-auth.basicauth.users=${TRAEFIK_USERNAME_FILE}:${TRAEFIK_HASHED_PASSWORD_FILE}
         # - traefik.http.middlewares.admin-auth.basicauth.users=$$(cat /run/secrets/TRAEFIK_USERNAME):$$(cat /run/secrets/TRAEFIK_PASSWORD)
         # https-redirect middleware to redirect HTTP to HTTPS
         # It can be re-used by other stacks in other Docker Compose files
         - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
         # traefik-http set up only to use the middleware to redirect to https
-        - traefik.http.routers.traefik-public-http.rule=Host(`${CHEQD_TRAEFIK_DOMAIN}`)
+        - traefik.http.routers.traefik-public-http.rule=Host(`${TRAEFIK_DOMAIN_FILE}`)
         # - traefik.http.routers.traefik-public-http.rule=Host(`$$(cat /run/secrets/TRAEFIK_DOMAIN)`)
         - traefik.http.routers.traefik-public-http.entrypoints=http
         - traefik.http.routers.traefik-public-http.middlewares=https-redirect
         # traefik-https the actual router using HTTPS
-        - traefik.http.routers.traefik-public-https.rule=Host(`${CHEQD_TRAEFIK_DOMAIN}`)
+        - traefik.http.routers.traefik-public-https.rule=Host(`${TRAEFIK_DOMAIN_FILE}`)
         # - traefik.http.routers.traefik-public-https.rule=Host(`$$(cat /run/secrets/TRAEFIK_DOMAIN)`)
         - traefik.http.routers.traefik-public-https.entrypoints=https
         - traefik.http.routers.traefik-public-https.tls=true
@@ -106,7 +102,7 @@ services:
       # Create an entrypoint "https" listening on address 80
       - --entrypoints.https.address=:443
       # Create the certificate resolver "le" for Let's Encrypt
-      - --certificatesresolvers.le.acme.email=${CHEQD_LE_AUTH_EMAIL}
+      - --certificatesresolvers.le.acme.email=${LE_AUTH_EMAIL_FILE}
       # - --certificatesresolvers.le.acme.email=$$(cat /run/secrets/LE_AUTH_EMAIL)
       # Store the Let's Encrypt certificates in the mounted volume
       - --certificatesresolvers.le.acme.storage=/certificates/acme.json
