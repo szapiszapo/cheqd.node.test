@@ -25,11 +25,11 @@ services:
       - source: LE_AUTH_EMAIL
         target: LE_AUTH_EMAIL
     environment:
-      - PROJECT_NAME=${PROJECT_NAME}
-      - CHEQD_TRAEFIK_USERNAME=/run/secrets/TRAEFIK_USERNAME
-      - CHEQD_TRAEFIK_HASHED_PASSWORD=/run/secrets/RAEFIK_HASHED_PASSWORD
-      - CHEQD_TRAEFIK_DOMAIN=/run/secrets/TRAEFIK_DOMAIN
-      - CHEQD_LE_AUTH_EMAIL=/run/secrets/LE_AUTH_EMAIL
+      - "PROJECT_NAME=${PROJECT_NAME}"
+      - "CHEQD_TRAEFIK_USERNAME=/run/secrets/TRAEFIK_USERNAME"
+      - "CHEQD_TRAEFIK_HASHED_PASSWORD=/run/secrets/TRAEFIK_HASHED_PASSWORD"
+      - "CHEQD_TRAEFIK_DOMAIN=/run/secrets/TRAEFIK_DOMAIN"
+      - "CHEQD_LE_AUTH_EMAIL=/run/secrets/LE_AUTH_EMAIL"
     # entrypoint: /traefik-entrypoint.sh
     # entrypoint: sh -c "apk add --no-cache bash ; export CHEQD_TRAEFIK_USERNAME=$$(cat /run/secrets/TRAEFIK_USERNAME) ; export CHEQD_TRAEFIK_HASHED_PASSWORD=$$(cat /run/secrets/TRAEFIK_HASHED_PASSWORD) ; export CHEQD_TRAEFIK_DOMAIN=$$(cat /run/secrets/TRAEFIK_DOMAIN) ; export CHEQD_LE_AUTH_EMAIL=$$(cat /run/secrets/LE_AUTH_EMAIL) ; source /entrypoint.sh"
     # entrypoint: [ '/bin/sh', '-c', 'apk add --no-cache bash ; chmod +x /traefik-entrypoint.sh ; . /traefik-entrypoint.sh ; . /entrypoint.sh' ]
