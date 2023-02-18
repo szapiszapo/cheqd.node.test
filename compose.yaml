@@ -57,19 +57,20 @@ services:
         # That way you can add other internal Traefik instances per stack if needed
         - traefik.constraint-label=traefik-public
         # admin-auth middleware with HTTP Basic auth
-        - traefik.http.middlewares.admin-auth.basicauth.users=${{env \"TRAEFIK_USERNAME\"}}:{{env \"TRAEFIK_PASSWORD\"}}
+        - traefik.http.middlewares.admin-auth.basicauth.users=${TRAEFIK_USERNAME}:${TRAEFIK_HASHED_PASSWORD}
+        # - traefik.http.middlewares.admin-auth.basicauth.users=${{env \"TRAEFIK_USERNAME\"}}:{{env \"TRAEFIK_PASSWORD\"}}
         # - traefik.http.middlewares.admin-auth.basicauth.users=$$(cat /run/secrets/TRAEFIK_USERNAME):$$(cat /run/secrets/TRAEFIK_PASSWORD)
         # https-redirect middleware to redirect HTTP to HTTPS
         # It can be re-used by other stacks in other Docker Compose files
         - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
         # traefik-http set up only to use the middleware to redirect to https
-        - traefik.http.routers.traefik-public-http.rule=Host(`${TRAEFIK_DOMAIN_FILE}`)
+        - traefik.http.routers.traefik-public-http.rule=Host(`${TRAEFIK_DOMAIN}`)
         # - traefik.http.routers.traefik-public-http.rule=Host(`$$(cat /run/secrets/TRAEFIK_DOMAIN)`)
         - traefik.http.routers.traefik-public-http.entrypoints=http
         - traefik.http.routers.traefik-public-http.middlewares=https-redirect
         # traefik-https the actual router using HTTPS
-        - traefik.http.routers.traefik-public-https.rule=Host(`${TRAEFIK_DOMAIN_FILE}`)
+        - traefik.http.routers.traefik-public-https.rule=Host(`${TRAEFIK_DOMAIN}`)
         # - traefik.http.routers.traefik-public-https.rule=Host(`$$(cat /run/secrets/TRAEFIK_DOMAIN)`)
         - traefik.http.routers.traefik-public-https.entrypoints=https
         - traefik.http.routers.traefik-public-https.tls=true
@@ -102,7 +103,7 @@ services:
       # Create an entrypoint "https" listening on address 80
       - --entrypoints.https.address=:443
       # Create the certificate resolver "le" for Let's Encrypt
-      - --certificatesresolvers.le.acme.email=${LE_AUTH_EMAIL_FILE}
+      - --certificatesresolvers.le.acme.email=${LE_AUTH_EMAIL}
       # - --certificatesresolvers.le.acme.email=$$(cat /run/secrets/LE_AUTH_EMAIL)
       # Store the Let's Encrypt certificates in the mounted volume
       - --certificatesresolvers.le.acme.storage=/certificates/acme.json
